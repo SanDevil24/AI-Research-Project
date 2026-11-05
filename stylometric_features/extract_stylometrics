@@ -1,1 +1,57 @@
+import pandas as pd
+import numpy as np
+import re
+import string
+
+# Load Dataset
+df = pd.read_csv("multisocial_english_balanced_10000.csv")
+def extract_sylometrics(text):
+  text = str(text)
+
+  # Word and Sentence Exploration
+  words = re.findall(r"\b\w+\b", text.lower())
+  sentences = re.split(r"[.!?]+", text)
+  word_count = len(words)
+  sentence_count = len([sentence for sentence in sentences if sentence.strip()])
+  average_word_length = (np.mean([len(word) for word in words]) if words else 0)
+  vocab_diversity = (len(set(words)) / word_count if word_count else 0)
+  average_sentence_length = (word_count / sentence_count if sentence_count else 0)
+
+  # Punctuation Count
+  exclamation_count = text.count("!")
+  question_count = text.count("?")
+  comma_count = text.count(",")
+  punctuation_count = sum(1 for char in text if char in string.punctuation)
+
+  # Uppercase Letter Ratio
+  letters = [char for char in text if char.isalpha()]
+  uppercase_letter_ratio = (sum(char.isupper() for char in letters) / len(letters) if letters else 0)
+
+  # Digit Frequency
+  digit_count = sum(char.isdigit() for char in text)
+  digit_frequency = (digit_count / len(text) if len(text) else 0)
+
+  # First-Person Identification
+  first_person_count = (text.count("i") + text.count("me") + text.count("my") + text.count("mine") + text.count("we") + text.count("us") + text.count("our") + text.count("ours"))
+  first_person = (first_person for word in words)
+
+  return pd.Series({
+      "word_count": word_count,
+      "sentence_count": sentence_count,
+      "average_word_length": average_word_length,
+      "vocab_diversity": vocab_diversity,
+      "average_sentence_length": average_sentence_length,
+      "exclamation_count": exclamation_count,
+      "question_count": question_count,
+      "comma_count": comma_count,
+      "punctuation_count": punctuation_count,
+      "uppercase_letter_ratio": uppercase_letter_ratio,
+      "digit_count": digit_count,
+      "digit_frequency": digit_frequency,
+      "first_person_count": first_person_count,
+      "first_person": first_person
+  })
+
+x = df["text"].apply(extract_sylometrics)
+y = df["label"]
 
