@@ -5,7 +5,7 @@ import string
 
 # Load Dataset
 df = pd.read_csv("multisocial_english_balanced_10000.csv")
-def extract_sylometrics(text):
+def extract_stylometrics(text):
   text = str(text)
 
   # Word and Sentence Exploration
@@ -32,8 +32,8 @@ def extract_sylometrics(text):
   digit_frequency = (digit_count / len(text) if len(text) else 0)
 
   # First-Person Identification
-  first_person_count = (text.count("i") + text.count("me") + text.count("my") + text.count("mine") + text.count("we") + text.count("us") + text.count("our") + text.count("ours"))
-  first_person = (first_person for word in words)
+  first_person_words = ["i", "me", "my", "mine", "myself", "we", "us", "our", "ours", "ourselves"]
+  first_person_count = sum(word in first_person_words for word in words)
 
   return pd.Series({
       "word_count": word_count,
@@ -48,10 +48,5 @@ def extract_sylometrics(text):
       "uppercase_letter_ratio": uppercase_letter_ratio,
       "digit_count": digit_count,
       "digit_frequency": digit_frequency,
-      "first_person_count": first_person_count,
-      "first_person": first_person
+      "first_person_count": first_person_count
   })
-
-x = df["text"].apply(extract_sylometrics)
-y = df["label"]
-
