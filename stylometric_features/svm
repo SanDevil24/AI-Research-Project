@@ -1,0 +1,17 @@
+from sklearn.svm import SVC
+from sklearn.metrics import (accuracy_score, recall_score, f1_score, roc_auc_score, precision_score, classification_report)
+
+svm_model = make_pipeline(StandardScaler(), SVC(kernel="linear", probability=True, class_weight="balanced", random_state=42))
+svm_model.fit(x_train, y_train)
+
+svm_prediction = svm_model.predict(x_test)
+svm_probability = svm_model.predict_proba(x_test)[:,1]
+
+print("Accuracy: ", accuracy_score(y_test, svm_prediction))
+print("Precision: ", precision_score(y_test, svm_prediction))
+print("Recall: ", recall_score(y_test, svm_prediction))
+print("F1 Score: ", f1_score(y_test, svm_prediction))
+print("AUROC Score: ", roc_auc_score(y_test, svm_probability))
+print(classification_report(y_test, svm_prediction))
+
+
