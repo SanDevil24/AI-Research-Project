@@ -1,2 +1,2 @@
 # AI-Research-Project
-Hannah,Citali,Sanjana,Jainey
+Hannah,Citali,Sanjana,Jaynie
